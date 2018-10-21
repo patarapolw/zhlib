@@ -16,11 +16,11 @@ class Level:
 
     def search_text(self, text):
         return {
-            'hanzi': sorted(self._search_hanzi(text), key=lambda x: x['sequence'] if x['sequence'] else math.inf),
-            'vocab': sorted(self._search_vocab(text), key=lambda x: -x['frequency'])
+            'hanzi': sorted(self.search_hanzi_iter(text), key=lambda x: x['sequence'] if x['sequence'] else math.inf),
+            'vocab': sorted(self.search_vocab_iter(text), key=lambda x: -x['frequency'])
         }
 
-    def _search_hanzi(self, text):
+    def search_hanzi_iter(self, text):
         for hanzi in find_hanzi(text):
             level = self.hanzi_get_level(hanzi)
             db_hanzi = db.Hanzi.get_or_none(hanzi=hanzi)
@@ -36,7 +36,7 @@ class Level:
                 **hanzi_dict
             }
 
-    def _search_vocab(self, text):
+    def search_vocab_iter(self, text):
         for vocab in find_vocab(text):
             db_vocab = db.Vocab.match(vocab)
             if db_vocab:
