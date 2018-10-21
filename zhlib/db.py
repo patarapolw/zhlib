@@ -129,6 +129,12 @@ class Vocab(BaseModel):
     @classmethod
     def search(cls, vocab, *fields):
         return cls.select(*fields).where(
+            cls.simplified.contains(vocab) | cls.traditional.contains(vocab)
+        )
+
+    @classmethod
+    def match(cls, vocab, *fields):
+        return cls.select(*fields).where(
             (cls.simplified == vocab) | (cls.traditional == vocab)
         )
 

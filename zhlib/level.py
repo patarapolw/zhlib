@@ -38,7 +38,7 @@ class Level:
 
     def _search_vocab(self, text):
         for vocab in find_vocab(text):
-            db_vocab = db.Vocab.search(vocab)
+            db_vocab = db.Vocab.match(vocab)
             if db_vocab:
                 vocab_dict = db_vocab[0].to_json()
             else:
