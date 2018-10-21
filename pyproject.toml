@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "zhlib"
+version = "0.1.0"
+description = ""
+authors = ["patarapolw <patarapolw@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "*"
+jieba = "^0.39.0"
+wordfreq = "^2.2"
+peewee = "^3.7"
+cjkradlib = "^0.1.2"
+requests = "^2.20"
+bs4 = "^0.0.1"
+
+[tool.poetry.dev-dependencies]
+#hanzilvlib = {path = "../hanzilvlib"}
+tqdm = "^4.28"
+prettyprinter = "^0.14.0"
