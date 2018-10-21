@@ -10,12 +10,17 @@ def is_han(s):
 
 
 def find_hanzi(s):
-    return RE_IS_HAN.findall(s)
+    return set(RE_IS_HAN.findall(s))
 
 
 def find_vocab(s):
     return set(v for v in jieba.cut_for_search(s) if is_han(v))
 
 
-def sort_vocab(v_list):
-    return sorted(v_list, key=lambda x: -word_frequency(x, 'zh'))
+def sort_vocab(v_list, limit=None):
+    result = sorted(v_list, key=lambda x: -word_frequency(x, 'zh'))
+
+    if limit:
+        return result[:limit]
+
+    return result

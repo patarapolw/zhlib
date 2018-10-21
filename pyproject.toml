@@ -1,8 +1,9 @@
 [tool.poetry]
 name = "zhlib"
-version = "0.1.0"
-description = ""
-authors = ["patarapolw <patarapolw@gmail.com>"]
+version = "0.1.1"
+description = "Dictionaries and what to learn in Chinese"
+authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = "*"
@@ -14,6 +15,5 @@ requests = "^2.20"
 bs4 = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
-#hanzilvlib = {path = "../hanzilvlib"}
 tqdm = "^4.28"
 prettyprinter = "^0.14.0"
