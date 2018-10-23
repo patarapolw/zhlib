@@ -27,12 +27,18 @@ class BaseModel(signals.Model):
         
         return d
 
+    def __iter__(self):
+        return iter(self.to_json().items())
+
     class Meta:
         database = database
 
 
 class Tag(BaseModel):
     name = pv.TextField(collation='NOCASE', unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Hanzi(BaseModel):
@@ -48,15 +54,37 @@ class Hanzi(BaseModel):
 
     cache = dict()
 
+    def __str__(self):
+        return '{hanzi} {pinyin} {meaning}'.format(**dict(
+            hanzi=self.hanzi,
+            pinyin=('[{}]'.format(self.pinyin) if self.pinyin else ''),
+            meaning=(self.meaning if self.meaning else '')
+        ))
+
     @property
     def more_vocabs(self):
         return Vocab.select().where(
             Vocab.simplified.contains(self.hanzi) | Vocab.traditional.contains(self.hanzi)
         )
 
+    def get_vocabs(self, limit=None):
+        return sort_vocab(set(self.vocabs) | set(self.more_vocabs), limit=limit)
+
     @property
     def more_sentences(self):
         return Sentence.select().where(Sentence.sentence.contains(self.hanzi))
+
+    def get_sentences(self, limit=None):
+        i = 0
+        for sentence in self.sentences:
+            if limit and i < limit:
+                yield sentence
+            i += 1
+
+        for sentence in self.more_sentences:
+            if limit and i < limit:
+                yield sentence
+            i += 1
 
     @property
     def _rad_result(self):
@@ -79,11 +107,11 @@ class Hanzi(BaseModel):
     def to_dict(self):
         result = super(Hanzi, self).to_dict()
         result.update({
+            'vocabs': self.get_vocabs(10),
+            'sentences': list(self.get_sentences(10)),
             'compositions': self.compositions,
             'supercompositions': self.supercompositions,
-            'variants': self.variants,
-            'more_vocabs': self.more_vocabs,
-            'more_sentences': self.more_sentences
+            'variants': self.variants
         })
 
         return result
@@ -118,6 +146,14 @@ class Vocab(BaseModel):
             (('simplified', 'traditional', 'pinyin'), True),
         )
 
+    def __str__(self):
+        return '{simplified} {traditional} {pinyin} {english}'.format(**dict(
+            simplified=self.simplified,
+            traditional=(self.traditional if self.traditional else ''),
+            pinyin=('[{}]'.format(self.pinyin) if self.pinyin else ''),
+            english=(self.english if self.english else '')
+        ))
+
     @property
     def more_sentences(self):
         query = Sentence.sentence.contains(self.simplified)
@@ -125,6 +161,18 @@ class Vocab(BaseModel):
             query = (query | Sentence.sentence.contains(self.simplified))
 
         return Sentence.select().where(query)
+
+    def get_sentences(self, limit=None):
+        i = 0
+        for sentence in self.sentences:
+            if limit and i < limit:
+                yield sentence
+            i += 1
+
+        for sentence in self.more_sentences:
+            if limit and i < limit:
+                yield sentence
+            i += 1
 
     @classmethod
     def search(cls, vocab, *fields):
@@ -141,7 +189,7 @@ class Vocab(BaseModel):
     def to_dict(self):
         result = super(Vocab, self).to_dict()
         result.update({
-            'more_sentences': self.more_sentences
+            'sentences': list(self.get_sentences(10))
         })
 
         return result
@@ -149,7 +197,7 @@ class Vocab(BaseModel):
     def to_json(self):
         result = super(Vocab, self).to_json()
         result.update({
-            'sentences': [s.sentence for s in self.more_sentences][:10],
+            'sentences': [s.sentence for s in self.get_sentences(10)],
             'tags': [t.name for t in self.tags]
         })
 
@@ -186,6 +234,13 @@ class Sentence(BaseModel):
         indexes = (
             (('sentence', 'pinyin'), True),
         )
+
+    def __str__(self):
+        return '{sentence} {pinyin} {english}'.format(**dict(
+            sentence=self.sentence,
+            pinyin=('[{}]'.format(self.pinyin) if self.pinyin else ''),
+            english=(self.english if self.english else '')
+        ))
 
     def to_json(self):
         result = super(Sentence, self).to_json()

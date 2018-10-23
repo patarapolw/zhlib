@@ -18,7 +18,7 @@ def find_vocab(s):
 
 
 def sort_vocab(v_list, limit=None):
-    result = sorted(v_list, key=lambda x: -word_frequency(x, 'zh'))
+    result = sorted(v_list, key=lambda x: -word_frequency(getattr(x, 'simplified', x), 'zh'))
 
     if limit:
         return result[:limit]
