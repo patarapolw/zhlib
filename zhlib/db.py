@@ -77,12 +77,12 @@ class Hanzi(BaseModel):
     def get_sentences(self, limit=None):
         i = 0
         for sentence in self.sentences:
-            if limit and i < limit:
+            if not limit or (limit and i < limit):
                 yield sentence
             i += 1
 
         for sentence in self.more_sentences:
-            if limit and i < limit:
+            if not limit or (limit and i < limit):
                 yield sentence
             i += 1
 
@@ -165,12 +165,12 @@ class Vocab(BaseModel):
     def get_sentences(self, limit=None):
         i = 0
         for sentence in self.sentences:
-            if limit and i < limit:
+            if not limit or (limit and i < limit):
                 yield sentence
             i += 1
 
         for sentence in self.more_sentences:
-            if limit and i < limit:
+            if not limit or (limit and i < limit):
                 yield sentence
             i += 1
 

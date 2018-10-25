@@ -5,10 +5,9 @@ name = "ankix"
 optional = false
 platform = "*"
 python-versions = "*"
-version = "0.1.6dev5"
+version = "0.2dev3"
 
 [package.dependencies]
-datauri = "branch master"
 mistune = "^0.8.4"
 peewee = "^3.7"
 python-magic = "^0.4.15"
@@ -92,22 +91,6 @@ version = "0.4.2"
 [package.dependencies]
 colorama = "*"
 
-[[package]]
-category = "main"
-description = ""
-name = "datauri"
-optional = false
-platform = "*"
-python-versions = "*"
-version = "1.0.1"
-
-[package.dependencies]
-python-magic = "*"
-
-[package.source]
-reference = "efc5dd46733fe87ec066f2a9294d57fad8e2f50d"
-type = "git"
-url = "https://github.com/patarapolw/python-data-uri.git"
 [[package]]
 category = "main"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -356,7 +339,7 @@ msgpack = "*"
 regex = "2018.02.21"
 
 [metadata]
-content-hash = "4b2ec617dcbf9510c3d25b6188443ac5d12adbaf2c6600e3e81de181f5db3186"
+content-hash = "5c5c29b570c807e53eb84ed12ce1e433e427c214fdc6139699f67e60d6d083c7"
 platform = "*"
 python-versions = "*"
 
@@ -369,7 +352,6 @@ chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "
 cjkradlib = ["92257e014dbef1ff8a2263ed46fbdf0d626ed5d56c5c4bc4177a685cfcef16cc", "e09034360d02c1798af125156305f69ce3ac824cf3db6c6c1b646a1437a3b701"]
 colorama = ["a3d89af5db9e9806a779a50296b5fdb466e281147c2c235e8225ecc6dbf7bbf3", "c9b54bebe91a6a803e0772c8561d53f2926bfeb17cd141fbabcb08424086595c"]
 colorful = ["679a6125654732f404c14f2e027e19bc03045a7ed87dccfd24cbe64e390bfef6", "9df4d5c83cb11e57fd5a79c3c6e0f435953d028ecd162f4aaba3aed464f00ebd"]
-datauri = []
 idna = ["156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e", "684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"]
 importlib-resources = ["73f454e062ac149bafd262b18c1f9ebc91f53bd6474e028d1bf1c59ebd152efb"]
 jieba = ["de385e48582a4862e55a9167334d0fbe91d479026e5dac40e59e22c08b8e883e"]
