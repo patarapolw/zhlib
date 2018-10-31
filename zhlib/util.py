@@ -17,10 +17,18 @@ def find_vocab(s):
     return set(v for v in jieba.cut_for_search(s) if is_han(v))
 
 
-def sort_vocab(v_list, limit=None):
-    result = sorted(v_list, key=lambda x: -word_frequency(getattr(x, 'simplified', x), 'zh'))
+def sort_vocab(v_list, limit=None, key=lambda x: x):
+    result = sorted(v_list, key=lambda x: -word_frequency(getattr(key(x), 'simplified', x), 'zh'))
 
     if limit:
         return result[:limit]
 
     return result
+
+
+def progress_bar(it, progress_func=lambda x, **kw: x, **kwargs):
+    try:
+        from tqdm import tqdm
+        return tqdm(it, **kwargs)
+    except ImportError:
+        return progress_func(it, **kwargs)

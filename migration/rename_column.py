@@ -1,8 +1,8 @@
 from playhouse.migrate import SqliteMigrator, migrate
-from zhlib import db
+from zhlib import zh
 
 if __name__ == '__main__':
-    migrator = SqliteMigrator(db.database)
+    migrator = SqliteMigrator(zh.database)
     migrate(
         migrator.rename_column('sentence', 'chinese', 'sentence')
     )

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhlib"
-version = "0.1.5"
+version = "0.1.6"
 description = "Dictionaries and what to learn in Chinese"
 authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
 license = "MIT"
@@ -13,8 +13,10 @@ peewee = "^3.7"
 cjkradlib = "^0.1.2"
 requests = "^2.20"
 bs4 = "^0.0.1"
-ankix = {path = "../ankix"}
-tqdm = "^4.28"
+simplesrs = {path = "../simplesrs"}
+ankisync = {path = "../ankisync"}
 
 [tool.poetry.dev-dependencies]
+ankix = {path = "../ankix"}
+tqdm = "^4.28"
 prettyprinter = "^0.14.0"

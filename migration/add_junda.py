@@ -1,7 +1,7 @@
 import peewee as pv
 from playhouse.migrate import SqliteMigrator, migrate
 
-from zhlib import db
+from zhlib import zh
 
 
 if __name__ == '__main__':
@@ -17,6 +17,6 @@ if __name__ == '__main__':
                 junda = int(row[0])
                 hanzi = row[1]
 
-                db_hanzi = db.Hanzi.get_or_create(hanzi=hanzi)[0]
+                db_hanzi = zh.Hanzi.get_or_create(hanzi=hanzi)[0]
                 db_hanzi.junda = junda
                 db_hanzi.save()

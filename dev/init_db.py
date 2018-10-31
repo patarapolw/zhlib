@@ -1,19 +1,19 @@
 from hanzilvlib.dictionary import HanziDict, VocabDict, SentenceDict
 from tqdm import tqdm
 
-from zhlib import db
+from zhlib import zh
 
 
 def init():
-    db.database.create_tables([
-        db.Hanzi, db.Vocab, db.Sentence,
-        db.VocabHanzi, db.SentenceHanzi, db.SentenceVocab
+    zh.database.create_tables([
+        zh.Hanzi, zh.Vocab, zh.Sentence,
+        zh.VocabHanzi, zh.SentenceHanzi, zh.SentenceVocab
     ])
 
 
 def fill_hanzi():
     for k, v in tqdm(HanziDict().entries.items()):
-        db.Hanzi.get_or_create(
+        zh.Hanzi.get_or_create(
             hanzi=v['character'],
             pinyin=v['pinyin'],
             meaning=v['meaning'],
@@ -24,7 +24,7 @@ def fill_hanzi():
 
 def fill_vocab():
     for k, v in tqdm(VocabDict().entries.items()):
-        db.Vocab.get_or_create(
+        zh.Vocab.get_or_create(
             simplified=v['simplified'],
             traditional=v['traditional'] if v['traditional'] != v['simplified'] else None,
             pinyin=v['pinyin'],
@@ -35,7 +35,7 @@ def fill_vocab():
 def fill_sentence():
     for k, v in tqdm(SentenceDict().entries.items()):
         # print(v)
-        db.Sentence.get_or_create(
+        zh.Sentence.get_or_create(
             sentence=v['sentence'],
             pinyin=v['pinyin'],
             english=v['english'],

@@ -1,23 +1,52 @@
 [[package]]
 category = "main"
 description = ""
+name = "ankisync"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "0.1.1.18"
+
+[package.dependencies]
+appdirs = "^1.4"
+bs4 = "^0.0.1"
+importlib_resources = "^1.0"
+peewee = "^3.7"
+psutil = "^5.4"
+
+[package.source]
+reference = ""
+type = "directory"
+url = "../ankisync"
+
+[[package]]
+category = "dev"
+description = ""
 name = "ankix"
 optional = false
 platform = "*"
 python-versions = "*"
-version = "0.2dev3"
+version = "0.2.1dev1"
 
 [package.dependencies]
 mistune = "^0.8.4"
 peewee = "^3.7"
 python-magic = "^0.4.15"
 pytimeparse = "^1.1"
-tqdm = "^4.27"
 
 [package.source]
 reference = ""
 type = "directory"
 url = "../ankix"
+
+[[package]]
+category = "main"
+description = "A small Python module for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
+name = "appdirs"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "1.4.3"
 
 [[package]]
 category = "main"
@@ -152,7 +181,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "0.7.5"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "The fastest markdown parser in pure Python"
 name = "mistune"
 optional = false
@@ -211,6 +240,15 @@ Pygments = ">=2.2.0"
 colorful = ">=0.4.0"
 
 [[package]]
+category = "main"
+description = "Cross-platform lib for process and system monitoring in Python."
+name = "psutil"
+optional = false
+platform = "Platform Independent"
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "5.4.8"
+
+[[package]]
 category = "dev"
 description = "Pygments is a syntax highlighting package written in Python."
 name = "pygments"
@@ -220,7 +258,7 @@ python-versions = "*"
 version = "2.2.0"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "File type identification using libmagic"
 name = "python-magic"
 optional = false
@@ -229,7 +267,7 @@ python-versions = "*"
 version = "0.4.15"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Time expression parser"
 name = "pytimeparse"
 optional = false
@@ -275,6 +313,23 @@ python = "<3"
 
 [[package]]
 category = "main"
+description = ""
+name = "simplesrs"
+optional = false
+platform = "*"
+python-versions = "*"
+version = "0.2dev7"
+
+[package.dependencies]
+peewee = "^3.7"
+
+[package.source]
+reference = ""
+type = "directory"
+url = "../simplesrs"
+
+[[package]]
+category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = false
@@ -286,7 +341,7 @@ version = "1.11.0"
 python = "<3"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Fast, Extensible Progress Meter"
 name = "tqdm"
 optional = false
@@ -339,12 +394,14 @@ msgpack = "*"
 regex = "2018.02.21"
 
 [metadata]
-content-hash = "5c5c29b570c807e53eb84ed12ce1e433e427c214fdc6139699f67e60d6d083c7"
+content-hash = "3258aff0fd662b34e1fd3255cde282b196e1a8b9c59ba8f199ccb2cb21bd02a9"
 platform = "*"
 python-versions = "*"
 
 [metadata.hashes]
+ankisync = []
 ankix = []
+appdirs = ["9e5896d1372858f8dd3344faf4e5014d21849c756c8d5701f78f8a103b372d92", "d8b24664561d0d34ddfaec54636d502d7cea6e29c3eaf68f3df6180863e2166e"]
 beautifulsoup4 = ["194ec62a25438adcb3fdb06378b26559eda1ea8a747367d34c33cef9c7f48d57", "90f8e61121d6ae58362ce3bed8cd997efb00c914eae0ff3d363c32f9a9822d10", "f0abd31228055d698bb392a826528ea08ebb9959e6bea17c606fd9c9009db938"]
 bs4 = ["36ecea1fd7cc5c0c6e4a1ff075df26d50da647b75376626cc186e2212886dd3a"]
 certifi = ["339dc09518b07e2fa7eda5450740925974815557727d6bd35d319c1524a04a4c", "6d58c986d22b038c8c0df30d639f23a3e6d172a05c3583e766f4c0b785c0986a"]
@@ -362,12 +419,14 @@ msgpack = ["0b3b1773d2693c70598585a34ca2715873ba899565f0a7c9a1545baef7e7fbdc", "
 pathlib2 = ["8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83", "d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"]
 peewee = ["a91c3ccff43ab71f08196aba1d17dd2548079744d54adc33d511db1c30b446ba"]
 prettyprinter = ["4b84d06baf6341a3874f71bd75b4da6139593a5093a8f7266efd7ca0429a76e2", "9547a888484a3bc6bc4d5835c235ca8c9bee1652765fffd674d49a11cf865c19"]
+psutil = ["1c19957883e0b93d081d41687089ad630e370e26dc49fd9df6951d6c891c4736", "1c71b9716790e202a00ab0931a6d1e25db1aa1198bcacaea2f5329f75d257fff", "3b7a4daf4223dae171a67a89314ac5ca0738e94064a78d99cfd751c55d05f315", "3e19be3441134445347af3767fa7770137d472a484070840eee6653b94ac5576", "6e265c8f3da00b015d24b842bfeb111f856b13d24f2c57036582568dc650d6c3", "809c9cef0402e3e48b5a1dddc390a8a6ff58b15362ea5714494073fa46c3d293", "b4d1b735bf5b120813f4c89db8ac22d89162c558cbd7fdd298866125fe906219", "bbffac64cfd01c6bcf90eb1bedc6c80501c4dae8aef4ad6d6dd49f8f05f6fc5a", "bfcea4f189177b2d2ce4a34b03c4ac32c5b4c22e21f5b093d9d315e6e253cd81"]
 pygments = ["78f3f434bcc5d6ee09020f92ba487f95ba50f1e3ef83ae96b9d5ffa1bab25c5d", "dbae1046def0efb574852fab9e90209b23f556367b5a320c0bcb871c77c3e8cc"]
 python-magic = ["f2674dcfad52ae6c49d4803fa027809540b130db1dec928cfbb9240316831375", "f3765c0f582d2dfc72c15f3b5a82aecfae9498bd29ca840d72f37d7bd38bfcd5"]
 pytimeparse = ["04b7be6cc8bd9f5647a6325444926c3ac34ee6bc7e69da4367ba282f076036bd", "e86136477be924d7e670646a98561957e8ca7308d44841e21f5ddea757556a0a"]
 regex = ["1b428a296531ea1642a7da48562746309c5c06471a97bd0c02dd6a82e9cecee8", "27d72bb42dffb32516c28d218bb054ce128afd3e18464f30837166346758af67", "32cf4743debee9ea12d3626ee21eae83052763740e04086304e7a74778bf58c9", "32f6408dbca35040bc65f9f4ae1444d5546411fde989cb71443a182dd643305e", "333687d9a44738c486735955993f83bd22061a416c48f5a5f9e765e90cf1b0c9", "35eeccf17af3b017a54d754e160af597036435c58eceae60f1dd1364ae1250c7", "361a1fd703a35580a4714ec28d85e29780081a4c399a99bbfb2aee695d72aedb", "494bed6396a20d3aa6376bdf2d3fbb1005b8f4339558d8ac7b53256755f80303", "5b9c0ddd5b4afa08c9074170a2ea9b34ea296e32aeea522faaaaeeeb2fe0af2e", "a50532f61b23d4ab9d216a6214f359dd05c911c1a1ad20986b6738a782926c1a", "a9243d7b359b72c681a2c32eaa7ace8d346b7e8ce09d172a683acf6853161d9c", "b44624a38d07d3c954c84ad302c29f7930f4bf01443beef5589e9157b14e2a29", "be42a601aaaeb7a317f818490a39d153952a97c40c6e9beeb2a1103616405348", "eee4d94b1a626490fc8170ffd788883f8c641b576e11ba9b4a29c9f6623371e0", "f69d1201a4750f763971ea8364ed95ee888fc128968b39d38883a72a4d005895"]
 requests = ["99dcfdaaeb17caf6e526f32b6a7b780461512ab3f1d992187801694cba42770c", "a84b8c9ab6239b578f22d1c21d51b696dcfe004032bb80ea832398d6909d7279"]
 scandir = ["04b8adb105f2ed313a7c2ef0f1cf7aff4871aa7a1883fa4d8c44b5551ab052d6", "1444134990356c81d12f30e4b311379acfbbcd03e0bab591de2696a3b126d58e", "1b5c314e39f596875e5a95dd81af03730b338c277c54a454226978d5ba95dbb6", "346619f72eb0ddc4cf355ceffd225fa52506c92a2ff05318cfabd02a144e7c4e", "44975e209c4827fc18a3486f257154d34ec6eaec0f90fef0cca1caa482db7064", "61859fd7e40b8c71e609c202db5b0c1dbec0d5c7f1449dec2245575bdc866792", "a5e232a0bf188362fa00123cc0bb842d363a292de7126126df5527b6a369586a", "c14701409f311e7a9b7ec8e337f0815baf7ac95776cc78b419a1e6d49889a383", "c7708f29d843fc2764310732e41f0ce27feadde453261859ec0fca7865dfc41b", "c9009c527929f6e25604aec39b0a43c3f831d2947d89d6caaab22f057b7055c8", "f5c71e29b4e2af7ccdc03a020c626ede51da471173b4a6ad1e904f2b2e04b4bd"]
+simplesrs = []
 six = ["70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9", "832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"]
 tqdm = ["3c4d4a5a41ef162dd61f1edb86b0e1c7859054ab656b2e7c7b77e7fbf6d9f392", "5b4d5549984503050883bc126280b386f5f4ca87e6c023c5d015655ad75bdebb"]
 typing = ["4027c5f6127a6267a435201981ba156de91ad0d1d98e9ddc2aa173453453492d", "57dcf675a99b74d64dacf6fba08fb17cf7e3d5fdff53d4a30ea2a5e7e52543d4", "a4c8473ce11a65999c8f59cb093e70686b6c84c98df58c1dae9b3b196089858a"]

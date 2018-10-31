@@ -1,7 +1,7 @@
 from wordfreq import word_frequency
 import math
 
-from . import db
+from . import zh
 from .util import find_hanzi, find_vocab
 
 
@@ -42,7 +42,7 @@ class HanziLevel:
     def __iter__(self):
         for hanzi in find_hanzi(self.text):
             level, tier = self.get_level(hanzi)
-            db_hanzi = db.Hanzi.get_or_none(hanzi=hanzi)
+            db_hanzi = zh.Hanzi.get_or_none(hanzi=hanzi)
             if db_hanzi:
                 if self.jsonify:
                     yield level, tier, db_hanzi.to_json()
@@ -56,7 +56,7 @@ class HanziLevel:
 
     @classmethod
     def get_level(cls, hanzi):
-        db_hanzi = db.Hanzi.get_or_none(hanzi=hanzi)
+        db_hanzi = zh.Hanzi.get_or_none(hanzi=hanzi)
         if db_hanzi:
             level = db_hanzi.junda
         else:
@@ -79,7 +79,7 @@ class VocabLevel:
         for vocab in find_vocab(self.text):
             freq, tier = self.get_level(vocab)
 
-            db_vocab = db.Vocab.match(vocab)
+            db_vocab = zh.Vocab.match(vocab)
             if len(db_vocab) > 0:
                 if self.jsonify:
                     yield freq, tier, db_vocab[0].to_json()

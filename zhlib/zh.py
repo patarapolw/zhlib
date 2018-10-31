@@ -15,6 +15,9 @@ radical_finder = RadicalFinder()
 class BaseModel(signals.Model):
     base_related = pv.ForeignKeyField('self', backref='related', null=True)
 
+    def __getitem__(self, item):
+        return getattr(self, item)
+
     def to_dict(self):
         d = model_to_dict(self, backrefs=True, manytomany=True)
         d.pop('base_related')
@@ -119,12 +122,12 @@ class Hanzi(BaseModel):
     def to_json(self):
         result = super(Hanzi, self).to_json()
         result.update({
-            'vocabs': sort_vocab(set(v.simplified for v in
-                                     Vocab.search(self.hanzi, Vocab.simplified, Vocab.traditional)), limit=10),
-            'sentences': [s.sentence for s in
-                          Sentence.select(Sentence.sentence).where(Sentence.sentence.contains(self.hanzi))][:10],
+            'vocabs': sort_vocab(Vocab.search(self.hanzi), limit=10),
+            'sentences': [str(s) for s in
+                          Sentence.select().where(Sentence.sentence.contains(self.hanzi))][:10],
             'tags': [t.name for t in self.tags]
         })
+        result['vocabs'] = [str(v) for v in result['vocabs']]
 
         return result
 
@@ -175,14 +178,14 @@ class Vocab(BaseModel):
             i += 1
 
     @classmethod
-    def search(cls, vocab, *fields):
-        return cls.select(*fields).where(
+    def search(cls, vocab):
+        return cls.select().where(
             cls.simplified.contains(vocab) | cls.traditional.contains(vocab)
         )
 
     @classmethod
-    def match(cls, vocab, *fields):
-        return cls.select(*fields).where(
+    def match(cls, vocab):
+        return cls.select().where(
             (cls.simplified == vocab) | (cls.traditional == vocab)
         )
 
@@ -197,7 +200,7 @@ class Vocab(BaseModel):
     def to_json(self):
         result = super(Vocab, self).to_json()
         result.update({
-            'sentences': [s.sentence for s in self.get_sentences(10)],
+            'sentences': [str(s) for s in self.get_sentences(10)],
             'tags': [t.name for t in self.tags]
         })
 
@@ -245,9 +248,10 @@ class Sentence(BaseModel):
     def to_json(self):
         result = super(Sentence, self).to_json()
         result.update({
-            'vocab': sort_vocab(set(v.simplified for v in self.vocabs), limit=10),
+            'vocab': sort_vocab(set(v for v in self.vocabs), limit=10),
             'tags': [t.name for t in self.tags]
         })
+        result['vocab'] = [str(v) for v in result['vocab']]
 
         return result
 
@@ -277,3 +281,37 @@ def sentence_post_save(model_class, instance, created):
                 db_vocab[0].sentences.add(instance)
             except pv.IntegrityError:
                 pass
+
+
+def search(s):
+    sentences = ''
+    if len(s) > 1:
+        sentences = Sentence.select().where(Sentence.sentence == s)
+    hanzis = ''
+    if len(s) == 1:
+        hanzis = Hanzi.select().where(Hanzi.hanzi == s)
+
+    vocabs = Vocab.match(s)
+
+    d = {
+        'hanzi': hanzis,
+        'vocab': vocabs,
+        'sentences': sentences
+    }
+
+    to_pop = []
+    for k, v in d.items():
+        if len(v) == 0:
+            to_pop.append(k)
+        else:
+            d[k] = [x.to_json() for x in v]
+
+    for k in to_pop:
+        d.pop(k)
+
+    if len(d) == 1:
+        v = tuple(d.values())[0]
+        if len(v) == 1:
+            return v[0]
+
+    return d
