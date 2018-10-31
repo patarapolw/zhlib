@@ -5,11 +5,10 @@ name = "ankisync"
 optional = false
 platform = "*"
 python-versions = "*"
-version = "0.1.1.18"
+version = "0.1.4.dev2"
 
 [package.dependencies]
 appdirs = "^1.4"
-bs4 = "^0.0.1"
 importlib_resources = "^1.0"
 peewee = "^3.7"
 psutil = "^5.4"

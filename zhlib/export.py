@@ -96,21 +96,23 @@ Frequency: {{frequency}}
         if self.MODEL_HANZI not in self.anki.model_names():
             self.build_model_hanzi()
 
-        note_ids = self.anki.add_notes([self._build_hanzi_note(hanzi) for hanzi in hanzis])
+        note_ids = self.anki.upsert_notes([self._build_hanzi_note(hanzi) for hanzi in hanzis])
 
         for i in range(1, 7):
             self.change_deck('Hanzi', i, note_ids)
 
     def _build_hanzi_note(self, hanzi):
         timestamp = datetime.now().strftime('%Y-%m-%d')
-        note_data = dict(hanzi)
+
+        note_data_defaults = dict(hanzi)
+        h_key = note_data_defaults.pop('hanzi')
 
         try:
-            note_data.update({
+            note_data_defaults.update({
                 'vocabs': markdown('\n'.join(f'- {v}' for v in hanzi.get_vocabs(10))),
                 'sentences': markdown('\n'.join(f'- {s}' for s in hanzi.get_sentences(10)))
             })
-            note_data.pop('tags')
+            note_data_defaults.pop('tags')
             tags = [str(t) for t in hanzi.tags]
         except AttributeError:
             tags = []
@@ -118,9 +120,12 @@ Frequency: {{frequency}}
         return {
             'deckId': 1,
             'modelName': self.MODEL_HANZI,
-            'fields': dict((k, str(v)) for k, v in note_data.items()),
+            'fields': {
+                'hanzi': h_key,
+                'defaults': dict((k, str(v)) for k, v in note_data_defaults.items() if v is not None)
+            },
             'tags': ['zhlib', 'hanzi',
-                     'tier{t}'.format(t=HanziLevel.get_level(note_data['hanzi'])[1]), timestamp] + tags
+                     'tier{t}'.format(t=HanziLevel.get_level(h_key)[1]), timestamp] + tags
         }
 
     def build_model_vocab(self):
@@ -151,7 +156,7 @@ Frequency: {{frequency}}
         if self.MODEL_VOCAB not in self.anki.model_names():
             self.build_model_vocab()
 
-        note_ids = self.anki.add_notes([self._build_vocab_note(vocab) for vocab in vocabs])
+        note_ids = self.anki.upsert_notes([self._build_vocab_note(vocab) for vocab in vocabs])
 
         for i in range(1, 7):
             self.change_deck_hsk(i, note_ids)
@@ -159,15 +164,18 @@ Frequency: {{frequency}}
 
     def _build_vocab_note(self, vocab):
         timestamp = datetime.now().strftime('%Y-%m-%d')
-        note_data = dict(vocab)
-        f, t = VocabLevel.get_level(note_data['simplified'])
-        note_data['frequency'] = str(f)
+
+        note_data_defaults = dict(vocab)
+        simplified = note_data_defaults.pop('simplified')
+
+        f, t = VocabLevel.get_level(simplified)
+        note_data_defaults['frequency'] = str(f)
 
         try:
-            note_data.update({
+            note_data_defaults.update({
                 'sentences': markdown('\n'.join(f'- {s}' for s in vocab.get_sentences(10)))
             })
-            note_data.pop('tags')
+            note_data_defaults.pop('tags')
             tags = [str(t) for t in vocab.tags]
         except AttributeError:
             tags = []
@@ -175,7 +183,10 @@ Frequency: {{frequency}}
         return {
             'deckId': 1,
             'modelName': self.MODEL_VOCAB,
-            'fields': dict((k, str(v)) for k, v in note_data.items()),
+            'fields': {
+                'simplified': simplified,
+                'defaults': dict((k, str(v)) for k, v in note_data_defaults.items() if v is not None)
+            },
             'tags': ['zhlib', 'vocab',
                      'tier{t}'.format(t=t), timestamp] + tags
         }
