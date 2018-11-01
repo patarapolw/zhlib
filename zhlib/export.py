@@ -4,9 +4,7 @@ import simplesrs as srs
 import mistune
 import logging
 from ankisync.anki import Anki
-from ankisync.builder import FieldBuilder, TemplateBuilder
 from ankisync.presets import get_wanki_min_dconf
-from ankisync import db as anki_db
 
 from .level import HanziLevel, VocabLevel
 from .util import progress_bar
@@ -68,9 +66,9 @@ Frequency: {{frequency}}
 
     def build_model_hanzi(self):
         field_names = [
-            'hanzi',
+            'hanzi',    # The two fields of the question side must be firsts in order.
+            'meaning',  # This too.
             'pinyin',
-            'meaning',
             'heisig',
             'kanji',
             'junda',
@@ -81,15 +79,11 @@ Frequency: {{frequency}}
 
         self.anki.add_model(
             name=self.MODEL_HANZI,
-            fields=[FieldBuilder(name, i) for i, name in enumerate(field_names)],
-            templates=[TemplateBuilder(
-                name=k, question=v,
-                answer=self.HANZI_A_FORMAT,
-                order=i
-            ) for i, (k, v) in enumerate({
-                'Forward': markdown('# Hanzi: {{hanzi}}'),
-                'Reverse': markdown('# Hanzi meaning: {{meaning}}')
-            }.items())]
+            fields=field_names,
+            templates={
+                'Forward': (markdown('# Hanzi: {{hanzi}}'), self.HANZI_A_FORMAT),
+                'Reverse': (markdown('# Hanzi meaning: {{meaning}}'), self.HANZI_A_FORMAT)
+            }
         )
 
     def add_hanzis(self, hanzis):
@@ -130,26 +124,22 @@ Frequency: {{frequency}}
 
     def build_model_vocab(self):
         field_names = [
-            'simplified',
+            'simplified',   # The two fields of the question side must be firsts in order.
+            'english',      # This too.
+            'frequency',
             'traditional',
             'pinyin',
-            'english',
             'sentences',
-            'frequency',
             'note'
         ]
 
         self.anki.add_model(
             name=self.MODEL_VOCAB,
-            fields=[FieldBuilder(name, i) for i, name in enumerate(field_names)],
-            templates=[TemplateBuilder(
-                name=k, question=v,
-                answer=self.VOCAB_A_FORMAT,
-                order=i
-            ) for i, (k, v) in enumerate({
-                                             'Forward': markdown('# Vocab: {{simplified}}'),
-                                             'Reverse': markdown('# Vocab meaning: {{english}}')
-                                         }.items())]
+            fields=field_names,
+            templates={
+                'Forward': (markdown('# Vocab: {{simplified}}'), self.VOCAB_A_FORMAT),
+                'Reverse': (markdown('# Vocab meaning: {{english}}'), self.VOCAB_A_FORMAT)
+            }
         )
 
     def add_vocabs(self, vocabs):
@@ -194,11 +184,12 @@ Frequency: {{frequency}}
     def change_deck(self, type_, tier, note_ids):
         card_forward = set()
         card_reverse = set()
-        for db_note in anki_db.Notes.select(anki_db.Notes.tags, anki_db.Notes.id).where(anki_db.Notes.id.in_(note_ids)):
-            tags = db_note.tags
+        for note_id in note_ids:
+            search_result = self.anki.search_notes({'_nid': note_id})
+            tags = search_result[0]['_tags']
             if type_.lower() in tags and f'tier{tier}' in tags and all('HSK' not in t for t in tags):
-                card_forward.add(self.anki.note_to_cards(db_note.id)['Forward'])
-                card_reverse.add(self.anki.note_to_cards(db_note.id)['Reverse'])
+                card_forward.add(self.anki.note_to_cards(note_id)['Forward'])
+                card_reverse.add(self.anki.note_to_cards(note_id)['Reverse'])
 
         try:
             dconf_id = self.anki.deck_config_names_and_ids()[self.DECK_CONFIG]
@@ -213,11 +204,12 @@ Frequency: {{frequency}}
 
         card_forward = set()
         card_reverse = set()
-        for db_note in anki_db.Notes.select(anki_db.Notes.tags, anki_db.Notes.id).where(anki_db.Notes.id.in_(note_ids)):
-            tags = db_note.tags
+        for note_id in note_ids:
+            search_result = self.anki.search_notes({'_nid': note_id})
+            tags = search_result[0]['_tags']
             if type_.lower() in tags and f'HSK_Level_{lv}' in tags:
-                card_forward.add(self.anki.note_to_cards(db_note.id)['Forward'])
-                card_reverse.add(self.anki.note_to_cards(db_note.id)['Reverse'])
+                card_forward.add(self.anki.note_to_cards(note_id)['Forward'])
+                card_reverse.add(self.anki.note_to_cards(note_id)['Reverse'])
 
         try:
             dconf_id = self.anki.deck_config_names_and_ids()[self.DECK_CONFIG]
