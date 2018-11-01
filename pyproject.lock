@@ -5,7 +5,7 @@ name = "ankisync"
 optional = false
 platform = "*"
 python-versions = "*"
-version = "0.1.5.dev7"
+version = "0.1.5.2"
 
 [package.dependencies]
 appdirs = "^1.4"

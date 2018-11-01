@@ -4,6 +4,7 @@ import simplesrs as srs
 import mistune
 import logging
 from ankisync.anki import Anki
+from ankisync.apkg import Apkg
 from ankisync.presets import get_wanki_min_dconf
 
 from .level import HanziLevel, VocabLevel
@@ -50,8 +51,25 @@ Frequency: {{frequency}}
 {{sentences}}
     ''')
 
-    def __init__(self):
-        self.anki = Anki(disallow_unsafe=None)
+    def __init__(self, apkg_filename=None):
+        if apkg_filename:
+            self.anki = Apkg(apkg_filename, disallow_unsafe=None)
+            self.anki.init(
+                first_model=self._build_model_vocab(),
+                first_deck='Chinese',
+                first_dconf=get_wanki_min_dconf()
+            )
+        else:
+            self.anki = Anki(disallow_unsafe=None)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return self.close()
+
+    def close(self):
+        return getattr(self.anki, 'close', lambda: None)()
 
     def search_text(self, text):
         hanzis = []
@@ -64,7 +82,7 @@ Frequency: {{frequency}}
             vocabs.append(vocab)
         self.add_vocabs(progress_bar(vocabs, desc='Adding vocab'))
 
-    def build_model_hanzi(self):
+    def _build_model_hanzi(self):
         field_names = [
             'hanzi',    # The two fields of the question side must be firsts in order.
             'meaning',  # This too.
@@ -77,7 +95,7 @@ Frequency: {{frequency}}
             'note'
         ]
 
-        self.anki.add_model(
+        return dict(
             name=self.MODEL_HANZI,
             fields=field_names,
             templates={
@@ -86,9 +104,12 @@ Frequency: {{frequency}}
             }
         )
 
+    def add_model_hanzi(self):
+        self.anki.add_model(**self._build_model_hanzi())
+
     def add_hanzis(self, hanzis):
         if self.MODEL_HANZI not in self.anki.model_names():
-            self.build_model_hanzi()
+            self.add_model_hanzi()
 
         note_ids = self.anki.upsert_notes([self._build_hanzi_note(hanzi) for hanzi in hanzis])
 
@@ -122,7 +143,7 @@ Frequency: {{frequency}}
                      'tier{t}'.format(t=HanziLevel.get_level(h_key)[1]), timestamp] + tags
         }
 
-    def build_model_vocab(self):
+    def _build_model_vocab(self):
         field_names = [
             'simplified',   # The two fields of the question side must be firsts in order.
             'english',      # This too.
@@ -133,7 +154,7 @@ Frequency: {{frequency}}
             'note'
         ]
 
-        self.anki.add_model(
+        return dict(
             name=self.MODEL_VOCAB,
             fields=field_names,
             templates={
@@ -142,9 +163,12 @@ Frequency: {{frequency}}
             }
         )
 
+    def add_model_vocab(self):
+        self.anki.add_model(**self._build_model_vocab())
+
     def add_vocabs(self, vocabs):
         if self.MODEL_VOCAB not in self.anki.model_names():
-            self.build_model_vocab()
+            self.add_model_vocab()
 
         note_ids = self.anki.upsert_notes([self._build_vocab_note(vocab) for vocab in vocabs])
 

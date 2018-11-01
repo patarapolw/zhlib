@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhlib"
-version = "0.1.7.4"
+version = "0.1.8"
 description = "Dictionaries and what to learn in Chinese"
 authors = ["Pacharapol Withayasakpunt <patarapolw@gmail.com>"]
 license = "MIT"
